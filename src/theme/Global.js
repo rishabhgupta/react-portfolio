@@ -7,9 +7,10 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: ${PRIMARY_FONT}
+    font-size: 16px;
 }
 body {
+    font-family: ${PRIMARY_FONT};
     background: ${({ theme }) => theme.bodyColor};
     color: ${({ theme }) => theme.textColor};
     transition: background 0.2s ease-in, color 0.2s ease-in;
@@ -35,7 +36,7 @@ export const Button = styled.button`
     border-radius: 4px;
     background: ${({ primary }) =>
         primary ? defaultTheme.primaryColor : defaultTheme.secondaryColor};
-    white-space: nowrap;
+    border-radius: 4px;
     padding: ${({ big }) => (big ? "12px 64px" : "10px 20px")};
     color: #fff;
     font-size: ${({ fontBig }) => (fontBig ? "20px" : "16px")};
