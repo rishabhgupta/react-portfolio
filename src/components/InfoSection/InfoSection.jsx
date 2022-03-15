@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { ThemeContext } from "styled-components";
-import { Button, Container } from "../../theme";
+import { Container, defaultTheme, typeScale } from "../../theme";
+import { SecondaryButton} from "../Button/Button"
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
@@ -9,8 +10,9 @@ import { MODES } from "../../helper/constants";
 import Fade from 'react-reveal/Fade';
 
 const InfoSec = styled.div`
+    transition: all 0.2s ease-out;
     padding: 160px 0;
-    background: ${({ lightBg }) => (lightBg ? "#fff" : "#101522")};
+    background: ${({ lightBg, theme }) => (lightBg ? theme.infoSectionLight : theme.infoSectionDark)};
 `;
 
 const InfoRow = styled.div`
@@ -48,8 +50,8 @@ const TextWrapper = styled.div`
 `;
 
 const TopLine = styled.div`
-    color: ${({ light }) => (light ? "#a9b3c1" : "#4B59F7")};
-    font-size: 18px;
+    color: ${({ theme }) => theme.primaryColor};
+    font-size: ${typeScale.header4};
     line-height: 16px;
     letter-spacing: 1.4px;
     margin-bottom: 16px;
@@ -57,16 +59,16 @@ const TopLine = styled.div`
 
 const Heading = styled.h1`
     margin-bottom: 24px;
-    font-size: 48px;
+    font-size: ${typeScale.header1};
     line-height: 1.1;
-    color: ${({ light }) => (light ? "#f7f8fa" : "#1c2237")};
+    color: ${({ theme }) => theme.textColor};
 `;
 
 const Subtitle = styled.p`
     max-width: 440px;
     margin-bottom: 35px;
     font-size: 24px;
-    color: ${({ light }) => (light ? "#a9b3c1" : "#1c2237")};
+    color: ${({ theme }) => theme.secondaryTextColor};
 `;
 
 const ImgWrapper = styled.div`
@@ -74,6 +76,20 @@ const ImgWrapper = styled.div`
     display: flex;
     justify-content: ${({ start }) => (start ? "flex-start" : "flex-end")};
 `;
+
+const LinkWrapper = styled.div`
+    display: block;
+    @media screen and (max-width: 768px) {
+        display: none;
+    }
+`
+
+const LinkWrapperRev = styled.div`
+    display: none;
+    @media screen and (max-width: 768px) {
+        display: block;
+    }
+`
 
 const Img = styled.img`
     padding-right: 0;
@@ -90,7 +106,6 @@ const InfoSection = ({
     heading = "This is heading",
     description = "This is description",
     buttonLabel = "Click",
-    primary = true,
     lightTopLine = false,
     lightHeading = false,
     lightDesc = false,
@@ -101,11 +116,10 @@ const InfoSection = ({
     const config = useContext(ConfigContext);
     const theme = useContext(ThemeContext);
 
-    console.log('theme', theme);
 
     return (
         <>
-            <InfoSec lightBg={lightBg}>
+            <InfoSec lightBg={lightBg} >
                 <Container>
                     <InfoRow imgStart={imgStart}>
                         <InfoColumn>
@@ -120,13 +134,13 @@ const InfoSection = ({
                                 <Subtitle light={lightDesc}>
                                     {description}
                                 </Subtitle>
-                                {config.mode !== MODES.CONSTRUCTION && (
+                                <LinkWrapper>
                                     <Link to="/sign-up">
-                                        <Button big fontBuf primary={primary}>
+                                        <SecondaryButton >
                                             {buttonLabel}
-                                        </Button>
+                                        </SecondaryButton>
                                     </Link>
-                                )}
+                                </LinkWrapper>
                             </TextWrapper>
                             
                         </InfoColumn>
@@ -138,6 +152,13 @@ const InfoSection = ({
                             </ImgWrapper>
                         </InfoColumn>
                     </InfoRow>
+                    <LinkWrapperRev>
+                        <Link to="/sign-up">
+                            <SecondaryButton >
+                                {buttonLabel}
+                            </SecondaryButton>
+                        </Link>
+                    </LinkWrapperRev>
                 </Container>
             </InfoSec>
         </>

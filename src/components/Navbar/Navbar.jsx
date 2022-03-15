@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { Container, Button } from "../../theme";
-import { FaBars, FaClone, FaTimes } from "react-icons/fa";
+import styled, { ThemeContext } from "styled-components";
+import { Container, typeScale } from "../../theme";
+import { PrimaryButton, SecondaryButton } from "../Button/Button";
+import { FaBars, FaClone, FaCode, FaMoon, FaSun, FaTimes } from "react-icons/fa";
 import { IconContext } from "react-icons/lib";
 import { ConfigContext } from "../../helper/config.context";
 import { useContext } from "react";
 
 const Nav = styled.nav`
-    background: #101522;
+    transition: all 0.2s ease-out;
+    background: ${({theme}) => theme.infoSectionLight};
     height: 80px;
     display: flex;
     justify-content: center;
@@ -28,16 +30,26 @@ const NavbarContainer = styled(Container)`
 `;
 
 const NavLogo = styled(Link)`
-    color: #fff;
+    transition: all 0.2s ease-out;
+    color: ${({theme}) => theme.textColor};
     justify-self: flex-start;
     cursor: pointer;
     text-decoration: none;
-    font-size: 2rem;
+    font-size: ${typeScale.header2};
     display: flex;
     align-items: center;
 `;
 
-const NavIcon = styled(FaClone)`
+const NavIcon = styled(FaCode)`
+    margin-right: 0.5em;
+    font-size: ${typeScale.header2};
+`;
+
+const DarkThemeIcon = styled(FaMoon)`
+    margin-right: 0.5em;
+`;
+
+const LightThemeIcon = styled(FaSun)`
     margin-right: 0.5em;
 `;
 
@@ -78,9 +90,10 @@ const NavMenu = styled.ul`
 const NavItem = styled.li`
     height: 80px;
     border-bottom: 2px solid transparent;
+    transition: all 0.2s linear;
 
     &:hover {
-        border-bottom: 2px solid #4b59f7;
+        border-bottom: 2px solid #1E9E80;
     }
 
     @media screen and (max-width: 960px) {
@@ -93,12 +106,18 @@ const NavItem = styled.li`
 `;
 
 const NavLink = styled(Link)`
-    color: white;
+    transition: all 0.2s ease-out;
+    color: ${({theme}) => theme.textColor};
     display: flex;
     align-items: center;
     text-decoration: none;
     padding: 0.5rem 1rem;
     height: 100%;
+    font-size: ${typeScale.header5};
+
+    &:hover {
+        color: ${({theme}) => theme.primaryColor};
+    }
 
     @media screen and (max-width: 960px) {
         text-align: center;
@@ -135,8 +154,9 @@ export const NavBtnLink = styled(Link)`
     outline: none;
 `;
 
-const Navbar = () => {
+const Navbar = ({ setTheme }) => {
     const config = useContext(ConfigContext);
+    const theme = useContext(ThemeContext);
     const [click, setClick] = useState(false);
     const [button, setButton] = useState(false);
 
@@ -151,49 +171,61 @@ const Navbar = () => {
     };
 
     useEffect(() => {
+        console.log('nabar', theme)
         showButton();
     }, []);
 
     return (
         <React.Fragment>
             <IconContext.Provider value={{ color: "#fff" }}>
-                <Nav>
+                <Nav theme={theme}>
                     <NavbarContainer>
                         <NavLogo to="/">
-                            <NavIcon color="#4B59F7" />
-                            OneCreate
+                            <NavIcon color="#1E9E80" />
+                            Rishabh Gupta
                         </NavLogo>
-                        {config.mode !== "construction" && (
-                            <MenuIcon onClick={handleClick}>
-                                {click ? <FaTimes /> : <FaBars />}
-                            </MenuIcon>
-                        )}
-                        {config.mode !== "construction" && (
-                            <NavMenu onClick={handleClick} click={click}>
-                                <NavItem>
-                                    <NavLink to="/">Home</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink to="/services">Services</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink to="/products">Products</NavLink>
-                                </NavItem>
-                                <NavItemBtn>
-                                    {button ? (
-                                        <NavBtnLink>
-                                            <Button primary>SIGN UP</Button>
-                                        </NavBtnLink>
+                        <MenuIcon onClick={handleClick}>
+                            {click ? <FaTimes /> : <FaBars />}
+                        </MenuIcon>
+                        <NavMenu onClick={handleClick} click={click}>
+                            <NavItem>
+                                <NavLink to="/">About</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink to="/services">Skills</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink to="/products">Work</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink to="/products">Projects</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink to="/products">Blog</NavLink>
+                            </NavItem>
+                            <NavItemBtn>
+                                {button ? (
+                                    <NavBtnLink>
+                                        <PrimaryButton>Resume</PrimaryButton>
+                                    </NavBtnLink>
+                                ) : (
+                                    <NavBtnLink>
+                                        <PrimaryButton>
+                                            Resume
+                                        </PrimaryButton>
+                                    </NavBtnLink>
+                                )}
+                            </NavItemBtn>
+                            <NavBtnLink>
+                                
+                                    {theme.mode === "dark" ? (
+                                        <LightThemeIcon color={theme.textColor} onClick={() => setTheme('light')}/>
                                     ) : (
-                                        <NavBtnLink>
-                                            <Button primary fontBig>
-                                                SIGN UP
-                                            </Button>
-                                        </NavBtnLink>
+                                        <DarkThemeIcon color={theme.textColor}  onClick={() => setTheme('dark')} />
                                     )}
-                                </NavItemBtn>
-                            </NavMenu>
-                        )}
+                                
+                            </NavBtnLink>
+                        </NavMenu>
                     </NavbarContainer>
                 </Nav>
             </IconContext.Provider>
